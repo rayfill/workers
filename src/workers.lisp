@@ -1,13 +1,11 @@
-#|
-  This file is a part of workers project.
-|#
-
 (in-package :cl-user)
 (defpackage workers
   (:use :cl)
   (:import-from :sb-thread :make-thread :join-thread :thread
-		:make-semaphore :signal-semaphore :try-semaphore :wait-on-semaphore :semaphore-count)
-  (:export :create-workers :wait-workers :start-workers :kill-workers))
+		:make-semaphore :signal-semaphore
+		:try-semaphore :wait-on-semaphore :semaphore-count)
+  (:export :create-workers :wait-workers :start-workers
+	   :kill-workers :workers-count))
 (in-package :workers)
 
 (defclass workers ()
@@ -51,3 +49,6 @@
 		  (sb-thread:join-thread (svref workers i)))
 	      (setf (svref workers i) :destroyed))
 	 end)))
+
+(defun workers-count (workers)
+  (length (workers workers)))
