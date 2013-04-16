@@ -5,7 +5,7 @@
 		:make-semaphore :signal-semaphore
 		:try-semaphore :wait-on-semaphore :semaphore-count)
   (:export :create-workers :wait-workers :start-workers
-	   :kill-workers :workers-count))
+	   :kill-workers :workers-count :workers-start-p))
 (in-package :workers)
 
 (defclass workers ()
@@ -30,7 +30,10 @@
     (make-instance 'workers :workers result :semaphore semaphore)))
 
 (defun start-workers (workers)
-  (signal-semaphore (semaphore workers) (length (workers workers))))
+  (signal-semaphore (semaphore workers) (1+ (length (workers workers)))))
+
+(defun workers-start-p (workers)
+  (> (semaphore-count (semaphore workers)) 0))
     
 (defun wait-workers (workers)
   (let ((workers (workers workers)))
